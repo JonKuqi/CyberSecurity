@@ -16,8 +16,6 @@ public class Main extends Application {
     public void start(Stage stage){
 
 
-
-
       //  Text text = new Text(DoubleColumnarTransposition.encrypt("WeAreDiscoveredFleeAtOnce","ZEBRAS","ZEBRAS"));
 
 

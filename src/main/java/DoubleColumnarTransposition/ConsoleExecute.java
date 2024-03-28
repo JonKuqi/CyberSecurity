@@ -24,7 +24,6 @@ public class ConsoleExecute {
         System.out.println(DoubleColumnarTransposition.decrypt(cypherText,key1,key2));
 
 
-
     }
 
 }
