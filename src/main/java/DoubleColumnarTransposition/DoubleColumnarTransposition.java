@@ -5,15 +5,12 @@ public class DoubleColumnarTransposition {
 
     public static String encrypt(String plainText,String key1, String key2) {
         String temp = DoubleColumnarTransposition.singleEncrypt(plainText,key1);
-        //System.out.println(temp);
-       // System.out.println("Mesazhi i ekriptuar: ");
         String cipherText = DoubleColumnarTransposition.singleEncrypt(temp,key2);
         System.out.print("Mesazhi i ekriptuar: ");
         return cipherText;
     }
     public static String decrypt(String cipherText, String key1, String key2){
         String temp = DoubleColumnarTransposition.singleDecrypt(cipherText,key2);
-        //System.out.println(temp);
         String plainText = DoubleColumnarTransposition.singleDecrypt(temp,key1);
         System.out.print("Mesazhi i dekriptuar: ");
         return plainText;
@@ -32,8 +29,6 @@ public class DoubleColumnarTransposition {
         char[][] matrica = new char[row][col];
         int pointer = 0;
 
-
-
         for(int i=0;i<row;i++){
             for(int j=0; j<col;j++){
 
@@ -50,9 +45,8 @@ public class DoubleColumnarTransposition {
 
             }
         }
-
+       //printimi i matrices
         for (int i = 0; i < matrica.length; i++) {
-
             // Loop through all elements of current row
             for (int j = 0; j < matrica[i].length; j++)
                 System.out.print(matrica[i][j] + " ");
@@ -61,18 +55,14 @@ public class DoubleColumnarTransposition {
         }
         StringBuilder cipherTextBuilder = new StringBuilder();
 
-
-        //System.out.println("______________________________");
-        //  System.out.println("Mesazhi: ");
-
-
+        //zgjedhja e kolonave sipas pozites se Qelesit
         for (int i = 0; i < col; i++) {
             for(int k=0;k<key.length();k++) {
                 if(keys[k]==(i+1)) {
                     for (int j = 0; j < row; j++) {
 
                         if(matrica[j][k] == '0') {
-                            // kushti per fill
+                            // kushti per heqjen e paddingut
                             // cipherTextBuilder.append(matrica[j][k]);
                         }else{
                             cipherTextBuilder.append(matrica[j][k]);
@@ -83,8 +73,6 @@ public class DoubleColumnarTransposition {
             }
         }
 
-        //  System.out.println(cipherTextBuilder.toString());
-      //  System.out.println("Mesazhi i ekriptuar: ");
         return cipherTextBuilder.toString();
 
     }
@@ -93,17 +81,14 @@ public class DoubleColumnarTransposition {
 
     public static String singleDecrypt(String cypherText,String key){
 
-
-
         int[]keys = DoubleColumnarTransposition.arrayOfLetters(key);
-
 
         int col = key.length();
         int row = (cypherText.length() +key.length() -1)/key.length();
 
         //int row e ka poziten e 0 ku shtohen, 0 shumfish i row
 
-        //Algoritem me gjet sa u kan paddingu
+        //Algoritem me gjet sa u kan paddingu, dhe me e shtu ne pozita te caktume
         int numri = 0;
         int temp = cypherText.length();
 
@@ -115,29 +100,17 @@ public class DoubleColumnarTransposition {
         // System.out.println("Numri i paddingut: "+nrPadding);
 
 
-        //adding the pading that we removed
+        //Shtiimi i paddingut(0)ne pozitat qe ish duft me kane
         char[] cipherArray = cypherText.toCharArray();
-        int[] pozitat = new int[nrPadding];
+        int[] pozitat = new int[nrPadding]; //llogariten pozitat ku 0 duhet mu shtu
         int point=0;
-        // System.out.println("                 Ka mbrri ktu  --");
+
         for(int i = keys.length-1;i>=(keys.length-nrPadding);i--){
-            pozitat[point] = keys[i]*row;
+            pozitat[point] = keys[i]*row;  //formule e gjeneruar me induksion
             point++;
         }
-        // System.out.println("                 Ka mbrri ktu  --2222222");
 
-        //Mire programi deri ketu.
-        // char []cipherArray2 = new char[cipherArray.length+nrPadding];
-        //sorton array
-        Arrays.sort(pozitat);
-        int pozitaKohore = 0;
-       /* for(int i=0;i<pozitat.length;i++) {
-            System.out.print(pozitat[i] +"  ");
-
-        } */
-
-        //cipherArray = DoubleColumnarTransposition.shtoAnetarNePoziten(cipherArray, 5);
-        //System.out.println("Funksioni 1: ");
+        Arrays.sort(pozitat); //sorton qe padingu me u shtu nga me i vogli(me e shty te fundit ne poziten qe duhet)
 
         for(int i=0;i<pozitat.length;i++) {
 
@@ -146,15 +119,13 @@ public class DoubleColumnarTransposition {
 
         }
 
-        //System.out.println("                 Ka mbrri ktu  --333333");
-
         String cipherText = new String(cipherArray);
         // System.out.println("CipherText pas paddingut: "+cipherText);
-
 
         char[][] matrica = new char[row][col];
         int pointer = 0;
 
+        //kalimi neper kolona ne baze qelesit
         for (int i = 0; i < col; i++) {
             for(int k=0;k<key.length();k++) {
                 if(keys[k]==(i+1)) {
@@ -169,23 +140,21 @@ public class DoubleColumnarTransposition {
         }
         StringBuilder plainText = new StringBuilder();
 
-
+       //kthen kolonat ne string(injoron 0)
         for (int i = 0; i < matrica.length; i++) {
-
             for (int j = 0; j < matrica[i].length; j++){
                 if(matrica[i][j] == '0'){
                     continue;
                 }
                 plainText.append(matrica[i][j]);
             }
-
         }
 
         return plainText.toString();
     }
 
     public static int [] arrayOfLetters(String key){
-
+        //Ne baze pozitave te shkronjave kthen varg sh: DBAC => 4213
         int[] vargu = new int[key.length()];
         char[] oreginal = key.toCharArray();
         char[] stringu = key.toCharArray();
@@ -225,6 +194,7 @@ public class DoubleColumnarTransposition {
     }
 
     public static char[] shtoAnetarNePoziten(char[] vargu, int index) {
+        //shton anetar ne vrg ne poziten qe ja japim
         char[] newVarg = new char[vargu.length + 1];
         int j = 0;
         for (int i = 0; i < newVarg.length; i++) {
